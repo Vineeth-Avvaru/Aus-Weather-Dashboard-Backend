@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import stats
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
 def process_data(file_name):
     df = pd.read_csv(file_name)
@@ -25,7 +28,6 @@ def process_data(file_name):
     from sklearn.experimental import enable_iterative_imputer
     from sklearn.impute import IterativeImputer
     MiceImputed = df[numerical].copy(deep=True)
-    print()
     mice_imputer = IterativeImputer()
     MiceImputed.iloc[:, :] = mice_imputer.fit_transform(MiceImputed)
     df[numerical] = MiceImputed
@@ -44,8 +46,7 @@ def process_data(file_name):
     df_new = df_new.loc[:,~df_new.columns.duplicated()]
     df_new.drop(['day'],axis=1,inplace=True)
     data = df_new[df_new.select_dtypes(exclude=['object']).columns]
-    from sklearn.decomposition import PCA
-    from sklearn.preprocessing import StandardScaler
+
 
     standardScaler = StandardScaler()
     data_norm=standardScaler.fit_transform(data.values)
@@ -56,7 +57,6 @@ def process_data(file_name):
     eigen_values = pca.singular_values_
     variance_explained = pca.explained_variance_ratio_
     cum_variance_explained=np.cumsum(variance_explained)
-    # from sklearn.cluster import KMeans
     # error = []
     # for i in range(2, 15):
     #     kmeans = KMeans(n_clusters=i)
