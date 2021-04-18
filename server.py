@@ -17,6 +17,9 @@ class NumpyArrayEncoder(JSONEncoder):
             return obj.tolist()
         return JSONEncoder.default(self, obj)
 
+
+# Data cleaning
+
 def sendInitialData():
     weatherData = {"data": "Hiii I am weather"}
     return weatherData
