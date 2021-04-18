@@ -1,12 +1,7 @@
 import sys
 import os
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import ndimage, misc
-from IPython.display import display, Image
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
 import pandas as pd
 from scipy import stats
 
