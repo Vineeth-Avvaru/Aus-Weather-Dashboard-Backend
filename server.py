@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import json
 from json import JSONEncoder
+from data_cleaning import process_data
 
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
@@ -19,9 +20,10 @@ class NumpyArrayEncoder(JSONEncoder):
 
 
 # Data cleaning
+columns, values = process_data("WeatherAUS.csv") 
 
 def sendInitialData():
-    weatherData = {"data": "Hiii I am weather"}
+    weatherData = {"columns" : columns.tolist(), "data": values.tolist()}
     return weatherData
 
 @app.route('/getWeatherData')
