@@ -7,6 +7,8 @@ from scipy import stats
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
 
 def process_data(file_name):
     df = pd.read_csv(file_name)
@@ -25,8 +27,6 @@ def process_data(file_name):
     numerical = df.select_dtypes(exclude=['object']).columns
     categorical = df.select_dtypes(include=['object']).columns
     # Multiple Imputation by Chained Equations
-    from sklearn.experimental import enable_iterative_imputer
-    from sklearn.impute import IterativeImputer
     MiceImputed = df[numerical].copy(deep=True)
     mice_imputer = IterativeImputer()
     MiceImputed.iloc[:, :] = mice_imputer.fit_transform(MiceImputed)
