@@ -2,9 +2,9 @@
 
 
 Priority 
-1 : Need for function
+1 : Need for function/Deadline
 2 : Bug for correctness
-3 : Bug
+3 : Bug/Feature implementation
 4 : Good to have feature
 
 TO Do:
