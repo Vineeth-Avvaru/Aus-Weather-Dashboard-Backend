@@ -7,6 +7,8 @@ from scipy import stats
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
 
 def process_data(file_name):
     df = pd.read_csv(file_name)
@@ -25,8 +27,6 @@ def process_data(file_name):
     numerical = df.select_dtypes(exclude=['object']).columns
     categorical = df.select_dtypes(include=['object']).columns
     # Multiple Imputation by Chained Equations
-    from sklearn.experimental import enable_iterative_imputer
-    from sklearn.impute import IterativeImputer
     MiceImputed = df[numerical].copy(deep=True)
     mice_imputer = IterativeImputer()
     MiceImputed.iloc[:, :] = mice_imputer.fit_transform(MiceImputed)
@@ -38,6 +38,8 @@ def process_data(file_name):
     df['Cloud'] =  (df['Cloud9am'] + df['Cloud3pm'])/2
     df['Temperature'] =  (df['Temp9am'] + df['Temp3pm'])/2
     df.drop(['WindSpeed9am','WindSpeed3pm','Humidity9am','Humidity3pm','Pressure9am','Pressure3pm','Cloud9am','Cloud3pm','Temp9am','Temp3pm'],axis=1,inplace=True)
+    df = df[(df['Evaporation']>0)]     #(df['Cloud']>0)* (df['Humidity']>0)*(df['Sunshine']>0)**(df['Rainfall']>0)
+    df = df[(df['year']>2008) *( df['year']<2017)]
     df_num = pd.concat([df[df.select_dtypes(exclude=['object']).columns],df['Location']],axis=1)
     df_cat = pd.concat([df[df.select_dtypes(include=['object']).columns], df_num[['year','month']]],axis=1 )
     df_num = df_num.groupby(['Location','year','month']).mean().reset_index()
@@ -69,7 +71,7 @@ def process_data(file_name):
     # plt.ylabel('Errors')
     # plt.title('Elbow plot for K-Means clustering')
     # plt.show()
-    km = KMeans(n_clusters=6)
+    km = KMeans(n_clusters=5)
     km.fit(data)
     data_cluster = km.labels_
     cluster_sizes = np.bincount(km.labels_)
