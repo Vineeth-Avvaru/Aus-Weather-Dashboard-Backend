@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 
-def process_data(file_name):
+def process_data(file_name,sample=False):
     df = pd.read_csv(file_name)
     df[["year", "month", "day"]] = df["Date"].str.split("-", expand=True)
     df.drop(['Date','RainToday','RainTomorrow'],axis=1,inplace=True)
@@ -77,4 +77,14 @@ def process_data(file_name):
     cluster_sizes = np.bincount(km.labels_)
     df_new['cluster'] = km.labels_
     df_new.insert(loc=0, column='index', value=df_new.index.values)
+    import random
+    sampling_results = pd.DataFrame(columns=df_new.columns)
+    for i in range(5):
+        cluster_size = cluster_sizes[i]
+        cluster_records = df_new[data_cluster == i]
+        sample_size = int(cluster_size * 0.25)
+        sampling_results = pd.concat([sampling_results, cluster_records.iloc[random.sample(range(cluster_size), sample_size)]]).reset_index(drop=True)
+    if sample:
+        sampling_results['index']=sampling_results.index.values
+        return df_new.columns,df_new.values, sampling_results.values 
     return df_new.columns,df_new.values
