@@ -77,6 +77,14 @@ def process_data(file_name,sample=False):
     cluster_sizes = np.bincount(km.labels_)
     df_new['cluster'] = km.labels_
     df_new.insert(loc=0, column='index', value=df_new.index.values)
+    avgRainfall = {}
+    for loc in locs:
+        avgRainfall[loc] = df_new[df_new['Location']==loc]['Rainfall'].mean()
+    temp = (np.fromiter(avgRainfall.values(), dtype=float).argsort())/len(avgRainfall)    
+    locRainfallIndex={}
+    for i in range(len(locs)):
+        locRainfallIndex[locs[i]] = temp[i]
+        
     import random
     sampling_results = pd.DataFrame(columns=df_new.columns)
     for i in range(5):
@@ -86,5 +94,5 @@ def process_data(file_name,sample=False):
         sampling_results = pd.concat([sampling_results, cluster_records.iloc[random.sample(range(cluster_size), sample_size)]]).reset_index(drop=True)
     if sample:
         sampling_results['index']=sampling_results.index.values
-        return df_new.columns,df_new.values, sampling_results.values 
-    return df_new.columns,df_new.values
+        return df_new.columns,df_new.values, sampling_results.values ,locRainfallIndex
+    return df_new.columns,df_new.values,locRainfallIndex

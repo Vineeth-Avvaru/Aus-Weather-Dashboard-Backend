@@ -12,10 +12,10 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Data cleaning
-columns, values ,sampled_values= process_data("WeatherAUS.csv",True) 
+columns, values ,sampled_values, locRainfallIndex= process_data("WeatherAUS.csv",True) 
 
 def sendInitialData():
-    weatherData = {"columns" : columns.tolist(), "data": values.tolist(),"sampled_data" : sampled_values.tolist()}
+    weatherData = {"columns" : columns.tolist(), "data": values.tolist(),"sampled_data" : sampled_values.tolist(), "loc_rainfall_index":locRainfallIndex}
     return weatherData
 
 @app.route('/getWeatherData')
